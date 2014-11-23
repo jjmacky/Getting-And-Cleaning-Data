@@ -1,0 +1,180 @@
+---
+title: "Tidy\\_HARUS\\_Codebook"
+author: "James McCammon"
+date: "Saturday, November 22, 2014"
+output: html_document
+---  
+
+### Files Covered in this Codebook
+
+This codebook describes three datasets
+
+- Tidy\_HARUS\_All
+- Tidy\_HARUS\_Means\_And\_Stds
+- Tidy\_HARUS\_Col\_Means
+
+All three of these datasets are derived from Version 1.0 of the Human Activity Recognition Using Smartphones (HARUS) dataset.
+
+Tidy\_HARUS\_Col\_Means is required to turn in as part of the final project for the November 2014 session of Coursera's "Getting and Cleaning Data." Tidy\_HARUS\_Means\_And\_Stds is also required as part of the course final project. Tidy\_HARUS\_All is an additional dataset not explicitly requested in the course project instructions. This is an intermediate "tidy" dataset with all columns of the original present. This dataset is useful if other types of analysis is desired with columns other than those containing the mean and standard deviations.
+
+### About the HARUS Dataset
+The HARUS dataset includes results from a group of 30 subjects between the ages of 19-48 years old. Each of the 30 subjects performed six activities:
+
+- Walking
+- Walking Upstairs
+- Walking Downstairs
+- Sitting
+- Standing
+- Laying
+
+During all six of these activities subjects were wearing a Samsung Galaxy S II smartphone on their waist. Like many smartphones the Galaxy includes a built-in accelerometere and gyroscope. Using these measurement devices 3-axial angular velocity was captured at a constant rate of 50Hz.
+
+The full dataset is available for download at: "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+
+### About Tidy\_HARUS\_All
+The original HARUS dataset was split in to multiple files including testing and training datasets to allow for machine learning algorithms to be easily applied. However, our interest was in purely descriptive statistics. Therefore, a more complete and structured dataset had to be constructed using the multiple files provided in the original HARUS.
+
+Tidy\_HARUS\_All includes 10,299 observations of 564 variables. Each observation corresponds to one measurement of a particular subject's activity. Each activity for each subject has multiple measurements. The final 561 variables of Tidy\_HARUS\_All are features from the original HARUS dataset. A full description of each one of these features can be found in features\_info\.txt.
+
+#### Process to Create Tidy\_HARUS\_All
+The diagram below from David Hood (a Community TA for the November 2014 session of Coursera's "Getting and Cleaning Data") outlines a process very similar to how Tidy\_HARUS\_All was constructed. The training and test sets for the feature data (X\_train\.txt and X\_test\.txt) were combined and given the feature names from features\.txt. Empty parenthesis were deleted from feature names to make them more readable. For instance, tBodyAcc-mean()-X was changed to simply tBodyAcc-mean-X. The activity files were combined in a similar manner (y\_train\.txt and y\_test\.txt). Subject data was also combined (subject\_train\.txt and subject\_test\.txt). The three sets of column data were then combined.
+
+Note that Tidy\_HARUS\_All includes columns for "Subject" and "Activity" on the right hand side of the feature data, and adds an additional column - "Measurements."
+
+##### Figure 1: Data Combination Process
+![Data Combination Process](https://coursera-forum-screenshots.s3.amazonaws.com/ab/a2776024af11e4a69d5576f8bc8459/Slide2.png "Data Combination Process")
+
+The final dataset structure is shown in Table 1 below. Where:
+
+1. "Subject" is the word "Subject" plus the unique id number assigned to each subject during the original HARUS experiment. Subject ids are between 1 and 30 and represents the particular subject doing the activities.
+2. "Activity" is one of the six activities outlined in the HARUS dataset description above.
+3. "Measurement" is the unique measurement id for a particular subject for a particular activity. "Measurement" is between 1 and 95 depending on the particulars of the subject involved and their activity.
+4. "Feature Data" is the feature data for that particular subject, activity, and measurement taken directly from the original HARUS data and is 561 columns wide.
+
+##### Table 1: Tidy\_HARUS\_All Structure
+Subject       | Activity            | Measurement | Feature Data   |
+------------- | ------------------- | ----------- | -------------- |
+Subject_1     | Walking             |      1      |  Feature Data  |
+Subject_1     | Walking             |      2      |  Feature Data  |
+Subject_1     | Walking             |      3      |  Feature Data  |
+Subject_1     | Walking Upstairs    |      1      |  Feature Data  |
+Subject_1     | Walking Upstairs    |      2      |  Feature Data  |
+Subject_1     | Walking Upstairs    |      3      |  Feature Data  |
+Subject_1     | Walking Upstairs    |      4      |  Feature Data  |
+Subject_1     | Walking Downstairs  |      1      |  Feature Data  |
+Subject_1     | Walking Downstairs  |      2      |  Feature Data  |
+Subject_1     | Walking Downstairs  |      3      |  Feature Data  |
+Subject_1     | Walking Downstairs  |      4      |  Feature Data  |
+Subject_1     | Walking Downstairs  |      5      |  Feature Data  |
+Subject_1     | Walking Downstairs  |      6      |  Feature Data  |
+Subject_1     | Walking Downstairs  |      7      |  Feature Data  |
+Subject_1     | Sitting             |      1      |  Feature Data  |
+Subject_1     | Sitting             |      2      |  Feature Data  |
+Subject_1     | Standing            |      1      |  Feature Data  |
+Subject_1     | Standing            |      2      |  Feature Data  |
+Subject_1     | Standing            |      3      |  Feature Data  |
+Subject_1     | Standing            |      4      |  Feature Data  |
+Subject_1     | Laying              |      1      |  Feature Data  |
+Subject_1     | Laying              |      2      |  Feature Data  |
+Subject_2     | Walking             |      1      |  Feature Data  |
+Subject_2     | Walking             |      2      |  Feature Data  |
+Subject_2     | Walking             |      3      |  Feature Data  |
+Subject_2     | Walking             |      4      |  Feature Data  |
+...           | ...                 |     ...     |       ...      |
+...           | ...                 |     ...     |       ...      |
+...           | ...                 |     ...     |       ...      |
+
+### About Tidy\_HARUS\_Means\_And\_Stds
+Tidy\_HARUS\_Means\_And\_Stds is quite similar to Tidy\_HARUS\_All except that it includes only those feature data columns dealing with means and standard deviations (stds). Using features\_info\.txt I defined columns dealing with means and standard deviations as any column with "mean" or "std" in the name, with my definition being case insensitive. This leads to a dataset with 10,299 rows (the same as Tidy\_HARUS\_Means\_And\_Stds) and 89 columns (one column each for subject, activity, and measurement, and 86 for mean and std feature data).
+
+#### Process to Create Tidy\_HARUS\_Means\_And\_Stds
+The process to create Tidy\_HARUS\_Means\_And\_Stds was simple. Taking Tidy\_HARUS\_All, an R search feature was used to find those feature columns out of the set of 561 that included the words "mean" or "std" anywhere in the feature name regardless of case. The format of the resulting dataset is shown in Table 2 below.
+
+##### Table 2: Tidy\_HARUS\_Means\_And\_Stds Structure
+Subject       | Activity            | Measurement | Feature Data              |
+------------- | ------------------- | ----------- | ------------------------- |
+Subject_1     | Walking             |      1      |  Mean & Std Feature Data  |
+Subject_1     | Walking             |      2      |  Mean & Std Feature Data  |
+Subject_1     | Walking             |      3      |  Mean & Std Feature Data  |
+Subject_1     | Walking Upstairs    |      1      |  Mean & Std Feature Data  |
+Subject_1     | Walking Upstairs    |      2      |  Mean & Std Feature Data  |
+Subject_1     | Walking Upstairs    |      3      |  Mean & Std Feature Data  |
+Subject_1     | Walking Upstairs    |      4      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      1      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      2      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      3      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      4      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      5      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      6      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      7      |  Mean & Std Feature Data  |
+Subject_1     | Sitting             |      1      |  Mean & Std Feature Data  |
+Subject_1     | Sitting             |      2      |  Mean & Std Feature Data  |
+Subject_1     | Standing            |      1      |  Mean & Std Feature Data  |
+Subject_1     | Standing            |      2      |  Mean & Std Feature Data  |
+Subject_1     | Standing            |      3      |  Mean & Std Feature Data  |
+Subject_1     | Standing            |      4      |  Mean & Std Feature Data  |
+Subject_1     | Laying              |      1      |  Mean & Std Feature Data  |
+Subject_1     | Laying              |      2      |  Mean & Std Feature Data  |
+Subject_2     | Walking             |      1      |  Mean & Std Feature Data  |
+Subject_2     | Walking             |      2      |  Mean & Std Feature Data  |
+Subject_2     | Walking             |      3      |  Mean & Std Feature Data  |
+Subject_2     | Walking             |      4      |  Mean & Std Feature Data  |
+...           | ...                 |     ...     |            ...            |
+...           | ...                 |     ...     |            ...            |
+...           | ...                 |     ...     |            ...            |
+
+### About Tidy\_HARUS\_Means\_And\_Stds
+Tidy\_HARUS\_Means\_And\_Stds uses the same columns as Tidy\_HARUS\_Means\_And\_Stds, but aggregates each subject and activity. In this case the "aggregating" or "collapsing" function is the mean. This leads to a dataset with 180 rows (30 subjects \* 6 activities ) and 88 columns (one column each for subject and activity, and 86 for mean and std feature data).
+
+#### Process to Create Tidy\_HARUS\_Means\_And\_Stds
+Tidy\_HARUS\_Means\_And\_Stds begins with Tidy\_HARUS\_Means\_And\_Stds, but aggregates subjects and activities across measurements. This is shown in Tables 3 and 4 below. In this example all 7 of the rows for Subject\_1 for the activity "Walking Downstairs" are collapsed into a single row by taking the mean of the seven measurements.  
+
+##### Table 3: Structure from Tidy\_HARUS\_Col\_Means
+Subject       | Activity            | Measurement | Feature Data              |
+------------- | ------------------- | ----------- | ------------------------- | 
+Subject_1     | Walking Downstairs  |      1      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      2      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      3      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      4      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      5      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      6      |  Mean & Std Feature Data  |
+Subject_1     | Walking Downstairs  |      7      |  Mean & Std Feature Data  |
+
+##### Table 4: Result after Table 3 is transformed
+Subject       | Activity            | Feature Data                                                             |
+------------- | ------------------- | ------------------------------------------------------------------------ | 
+Subject_1     | Walking Downstairs  | Average of Mean & Std Feature Data for Subject_1 for Walking Downstairs  |
+
+To get Tidy\_HARUS\_Means\_And\_Stds, the process above is repeated for all subjects and for all activities. The resulting dataset structure is shown in Table 5 below.
+
+##### Table 5: Tidy\_HARUS\_Col\_Means Structure
+Subject       | Activity            | Feature Data                                                                      | 
+------------- | ------------------- | --------------------------------------------------------------------------------- | 
+Subject_1     | Walking             |      Average of Mean & Std Feature Data for Subject_1 for Walking                 |  
+Subject_2     | Walking             |      Average of Mean & Std Feature Data for Subject_2 for Walking                 |  
+Subject_3     | Walking             |      Average of Mean & Std Feature Data for Subject_3 for Walking                 |  
+Subject_4     | Walking             |      Average of Mean & Std Feature Data for Subject_4 for Walking                 |  
+Subject_5     | Walking             |      Average of Mean & Std Feature Data for Subject_5 for Walking                 |  
+Subject_6     | Walking             |      Average of Mean & Std Feature Data for Subject_6 for Walking                 |
+Subject_7     | Walking             |      Average of Mean & Std Feature Data for Subject_7 for Walking                 |
+Subject_8     | Walking             |      Average of Mean & Std Feature Data for Subject_8 for Walking                 |
+...           | ...                 |                            ...                                                    |
+Subject_27    | Walking             |      Average of Mean & Std Feature Data for Subject_27 for Walking                | 
+Subject_28    | Walking             |      Average of Mean & Std Feature Data for Subject_28 for Walking                |
+Subject_29    | Walking             |      Average of Mean & Std Feature Data for Subject_29 for Walking                |
+Subject_30    | Walking             |      Average of Mean & Std Feature Data for Subject_30 for Walking                |
+Subject_1     | Walking Downstairs  |      Average of Mean & Std Feature Data for Subject_1 for Walking Downstairs      |
+Subject_2     | Walking Downstairs  |      Average of Mean & Std Feature Data for Subject_2 for Walking Downstairs      |
+Subject_3     | Walking Downstairs  |      Average of Mean & Std Feature Data for Subject_3 for Walking Downstairs      |
+Subject_4     | Walking Downstairs  |      Average of Mean & Std Feature Data for Subject_4 for Walking Downstairs      |
+Subject_5     | Walking Downstairs  |      Average of Mean & Std Feature Data for Subject_5 for Walking Downstairs      |
+Subject_6     | Walking Downstairs  |      Average of Mean & Std Feature Data for Subject_6 for Walking Downstairs      |
+Subject_7     | Walking Downstairs  |      Average of Mean & Std Feature Data for Subject_7 for Walking Downstairs      |
+...           | ...                 |                            ...                                                    |
+...           | ...                 |                            ...                                                    |
+...           | ...                 |                            ...                                                    |
+
+
+
+
+
