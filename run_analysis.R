@@ -16,11 +16,16 @@
 #################################################################################################
 
 # Get data function
-getData = function(fileURL, mainDir, subDir, rawFilePath) {
-  # If the data doesn't exist download it and setup a folder to store it  
+getData = function(fileURL, mainDir, subDir, rawFilePath, OS = NULL) {
+  # If the data doesn't exist download it and setup a folder to store it
   if (!file.exists(subDir)) {
-    print("Downloading data and creating file directory...")  
-    download.file(fileURL, destfile = rawFilePath)
+    print("Downloading data and creating file directory...")
+    method = switch(tolower(OS),
+                    "windows" = "internal",
+                    "mac" = "curl",
+                    "lynx" = "wget",
+                    "auto")
+    download.file(fileURL, destfile = rawFilePath, method)
     dir.create(file.path(mainDir, subDir), showWarnings = FALSE)
     unzip(rawFile, exdir = subDir)
   }
@@ -43,6 +48,7 @@ loadData = function(fileNames, requiredFiles, envir = environment()) {
     setTxtProgressBar(pb, file)
   }
   close(pb)
+  print("Files loaded.")
 }
 
 #################################################################################################
@@ -57,7 +63,7 @@ subDir = "Raw_Extracted"
 rawFile = 'CourseProj_Raw.zip'
 rawFilePath = file.path(mainDir, rawFile)
 # Download data and put in directory using custom function
-getData(fileURL, mainDir, subDir, rawFilePath) 
+getData(fileURL, mainDir, subDir, rawFilePath, OS = "Mac") 
 
 
 
@@ -99,7 +105,7 @@ y_data = factor(y_data$V1,labels = y_factors)
 # Combine subject data
 subject_data = rbind.data.frame(subject_train, subject_test)
 # Specify subject factor names and set factors
-subject_factors = paste0(rep("Subject"), "_", seq(1:max(subject_data)))
+subject_factors = paste0("Subject", "_", seq(1:max(subject_data)))
 subject_data = factor(subject_data$V1, labels = subject_factors)
 
 # Each row of a tidy dataset should be one observation.
@@ -136,7 +142,7 @@ aggregate(x = Tidy_HARUS_All[,means_and_stds_index],
                     Tidy_HARUS_All[["Activity"]]), 
           FUN = mean)
 names(Tidy_HARUS_Col_Means)[1:2] = names(Tidy_HARUS_All)[1:2]
-
+names(Tidy_HARUS_Col_Means)[-c(1:2)] = paste0("Avg", "_", names(Tidy_HARUS_Col_Means)[-c(1:2)])
 
 
 ################################# Write files to disk ########################################### 
